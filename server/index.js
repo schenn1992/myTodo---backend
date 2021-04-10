@@ -23,8 +23,6 @@ app.post("/todos", async(req, res) => {
     } catch (err) {
       console.error(err.message);
     }
-    
-    
 });
 
 
@@ -52,10 +50,33 @@ app.get("/todos/:id", async (req, res) => {
 
 
 //update a todo
+app.put("/todos/:id", async(req, res) => {
+  try {
+    const { id } = req.params;
+    const { description } = req.body;
+    const updateTodo = await pool.query(
+      "UPDATE todo SET description = $1 WHERE id = $2", 
+      [description, id]
+    );
+    res.json("Todo is updated");
+  } catch(err) {
+    console.error(err.message);
+  }
+})
 
 
 //delete a todo
-
+app.delete("/todos/:id", async(req, res) => {
+  try {
+    const { id } = req.params;
+    const deleteTodo = await pool.query(
+      "DELETE FROM todo WHERE id = $1", [id]
+    );
+    res.json("Todo deleted!!!!!");
+  } catch(err) {
+    console.error(err.message);
+  }
+});
 
 app.listen(port, () => {
   console.log(`myTodo app is listening at http://localhost:${port}`)
